@@ -95,8 +95,8 @@ Símbolos que representam operações:
 * =   → atribuição
 * > → maior que
 * <   → menor que
-* * → soma
-* * → subtração
+* + → soma
+* - → subtração
 
 Observação:
 O operador == pode ser implementado futuramente.
