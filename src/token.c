@@ -10,6 +10,7 @@ const char* tipo_para_string(TipoToken tipo) {
         case TK_ID: return "TK_ID";
         case TK_NUM: return "TK_NUM";
         case TK_STRING: return "TK_STRING";
+        case TK_COMENTARIO: return "TK_COMENTARIO";
         case TK_ATRIB: return "TK_ATRIB";
         case TK_MAIOR: return "TK_MAIOR";
         case TK_MENOR: return "TK_MENOR";

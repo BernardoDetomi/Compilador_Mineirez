@@ -106,16 +106,29 @@ O operador == pode ser implementado futuramente.
 * Espaços, tabs e quebras de linha são ignorados
 * Servem apenas para separar tokens
 
-2.7 Fim de arquivo
+2.7 Comentários
+
+O lexer reconhece comentários e retorna TK_COMENTARIO.
+
+Formas aceitas:
+
+* # comentário de linha
+* // comentário de linha
+* /* comentário de bloco */
+
+2.8 Fim de arquivo
 
 * Representado pelo token TK_EOF
 * Indica que não há mais código para analisar
 
-2.8 Erros léxicos
+2.9 Erros léxicos
 
-Qualquer símbolo não reconhecido gera:
+O lexer retorna TK_ERRO para situações como:
 
-<TK_ERRO, símbolo>
+* símbolo inválido
+* string não terminada
+* comentário não fechado
+* número seguido de letra ou _
 
 ---
 
@@ -194,19 +207,26 @@ Se o caractere for símbolo:
   * =
   * >
   * <
-  * *
-  * *
+  * +
+  * -
 
 Retorna o token correspondente
 
-4.5 Erros
+4.5 Comentários
+
+Se encontrar #, // ou /*:
+
+* O lexer lê o comentário completo
+* Retorna TK_COMENTARIO
+
+4.6 Erros
 
 Se o caractere não for reconhecido:
 
 * Retorna TK_ERRO
-* Guarda o caractere inválido
+* Guarda o símbolo inválido ou a descrição do erro
 
-4.6 Fim do código
+4.7 Fim do código
 
 Quando encontra '\0':
 
@@ -274,6 +294,7 @@ O analisador léxico do Mineirez:
 * Lê o código fonte
 * Identifica padrões
 * Gera tokens organizados
+* Reconhece comentários e erros léxicos básicos
 
 Ele é a base para as próximas etapas do compilador, como:
 

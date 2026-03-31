@@ -58,6 +58,7 @@ fim
 * Variáveis: `trem`, `x`, `valor`
 * Números: `10`, `200`
 * Strings: `"uai sô"`
+* Comentários: `#`, `//` ou `/* ... */`
 
 ### 🔴 Operadores
 
@@ -66,6 +67,21 @@ fim
 * `<` menor que
 * `+` soma
 * `-` subtração
+
+### 🟣 Comentários
+
+* `# comentário` → comentário de linha
+* `// comentário` → comentário de linha
+* `/* comentário */` → comentário de bloco
+
+### ⚠️ Erros léxicos
+
+O lexer agora devolve `TK_ERRO` para casos como:
+
+* símbolo inválido
+* string não terminada
+* comentário não fechado
+* número seguido de letra ou `_`
 
 ---
 

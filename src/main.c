@@ -4,6 +4,17 @@
 #include "lexer.h"
 #include "token.h"
 
+static void imprimir_token(Token t) {
+    printf("- token: %s\n", tipo_para_string(t.tipo));
+    printf("  lexema: %s\n", t.valor[0] != '\0' ? t.valor : "(vazio)");
+    printf("  linha: %d\n", t.linha);
+    printf("  coluna: %d\n", t.coluna);
+
+    if (t.tipo == TK_ERRO) {
+        printf("  erro: %s\n", t.erro[0] != '\0' ? t.erro : "erro_lexico");
+    }
+}
+
 char* ler_arquivo(const char* nome_arquivo) {
     FILE *f = fopen(nome_arquivo, "r");
 
@@ -42,7 +53,7 @@ int main(int argc, char *argv[]) {
 
     do {
         t = proximo_token();
-        printf("<%s, %s>\n", tipo_para_string(t.tipo), t.valor);
+        imprimir_token(t);
     } while (t.tipo != TK_EOF);
 
     free(codigo);

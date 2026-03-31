@@ -11,6 +11,7 @@ typedef enum {
     TK_ID,
     TK_NUM,
     TK_STRING,
+    TK_COMENTARIO,
 
     TK_ATRIB,
     TK_MAIOR,
@@ -27,6 +28,9 @@ typedef enum {
 typedef struct {
     TipoToken tipo;
     char valor[100];
+    char erro[100];
+    int linha;
+    int coluna;
 } Token;
 
 const char* tipo_para_string(TipoToken tipo);
