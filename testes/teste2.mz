@@ -1,2 +1,40 @@
-uai rabanada = 100
-fala rabanada
+# Comentário com hashtag
+
+// Comentário de linha estilo C++
+
+/* Comentário de bloco
+com múltiplas linhas */
+
+uai
+se
+entao
+fim
+fala
+
+variavel
+_variavel123
+nome_completo
+
+123
+456789
+
+"string simples"
+"outra string com espaços"
+
+// Teste de operadores
+a = 10
+b > 5
+c < 20
+d + 3
+e - 1
+
+# Testes de erro
+
+123abc          # número seguido de letra (erro)
+nome@invalido   # símbolo inválido (@)
+
+"string nao fechada
+
+/* comentario nao fechado
+
+_
