@@ -1,9 +1,9 @@
-#include <stdio.h>      // Biblioteca padrão de entrada e saída
-#include <ctype.h>      // Funções para classificação de caracteres (isalpha, isdigit, etc.)
-#include <string.h>     // Funções para manipulação de strings
+#include <stdio.h>      
+#include <ctype.h>      
+#include <string.h>     
 
-#include "token.h"      // Definição da struct Token e tipos de token
-#include "lexer.h"      // Declarações do lexer
+#include "token.h"      
+#include "lexer.h"      
 
 static const char* codigo;  // Ponteiro para o código fonte que será analisado
 static int pos;             // Posição atual no código

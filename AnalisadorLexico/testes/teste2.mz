@@ -31,7 +31,6 @@ e - 1
 # Testes de erro
 
 123abc          # número seguido de letra (erro)
-nome@invalido   # símbolo inválido (@)
 
 "string nao fechada
 

@@ -1,0 +1,19 @@
+uai x
+
+x = 10 + 20
+
+se x > 5 entao
+    fala "maior"
+fim
+
+enquanto x > 0 faca
+    x = x - 1
+fim
+
+// erro
+
+uai x
+
+x = 10 +
+
+fala "oi"
