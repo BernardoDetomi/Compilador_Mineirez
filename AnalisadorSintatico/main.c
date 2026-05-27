@@ -32,6 +32,32 @@ char* ler_arquivo(const char* nome_arquivo) {
     return buffer;
 }
 
+static void imprimir_tabela_lexica(void) {
+
+    printf("\nTABELA LEXICA\n");
+    printf("%-15s %-20s %-8s %-8s %-20s\n", "TIPO", "LEXEMA", "LINHA", "COLUNA", "ERRO");
+    printf("-------------------------------------------------------------------------------\n");
+
+    Token token;
+
+    do {
+
+        token = proximo_token();
+
+        printf(
+            "%-15s %-20s %-8d %-8d %-20s\n",
+            tipo_para_string(token.tipo),
+            token.valor[0] != '\0' ? token.valor : "(vazio)",
+            token.linha,
+            token.coluna,
+            token.tipo == TK_ERRO
+                ? (token.erro[0] != '\0' ? token.erro : "erro_lexico")
+                : "-"
+        );
+
+    } while (token.tipo != TK_EOF);
+}
+
 int main(int argc, char *argv[]) {
 
     if (argc < 2) {
@@ -42,6 +68,10 @@ int main(int argc, char *argv[]) {
     }
 
     char *codigo = ler_arquivo(argv[1]);
+
+    iniciar_lexer(codigo);
+
+    imprimir_tabela_lexica();
 
     iniciar_lexer(codigo);
 

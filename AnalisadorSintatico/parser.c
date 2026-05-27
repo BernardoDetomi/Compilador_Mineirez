@@ -6,6 +6,7 @@
 #include "token.h"
 
 static Token token_atual;
+static int houve_erro_sintatico;
 
 static void avancar() {
 
@@ -17,6 +18,8 @@ static void avancar() {
 }
 
 static void erro(const char* mensagem) {
+
+    houve_erro_sintatico = 1;
 
     printf("\nERRO SINTATICO\n");
 
@@ -54,6 +57,8 @@ static void consumir(TipoToken tipo) {
 }
 
 void iniciar_parser() {
+
+    houve_erro_sintatico = 0;
 
     avancar();
 }
@@ -216,5 +221,12 @@ void programa() {
         comando();
     }
 
-    printf("\nSUCESSO SINTATICO!\n");
+    if (houve_erro_sintatico) {
+
+        printf("\nANALISE SINTATICA FINALIZADA COM ERROS!\n");
+
+    } else {
+
+        printf("\nSUCESSO SINTATICO!\n");
+    }
 }

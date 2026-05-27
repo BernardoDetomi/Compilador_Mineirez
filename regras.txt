@@ -1,0 +1,12 @@
+programa -> comando*
+
+comando ->
+      declaracao
+      atribuicao
+      condicional
+      repeticao
+      fala
+
+declaracao -> UAI ID
+
+atribuicao -> ID '=' expressao

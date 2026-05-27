@@ -1,0 +1,7 @@
+uai x
+
+declaracao()
+↓
+consumir(TK_UAI)
+↓
+consumir(TK_ID)
