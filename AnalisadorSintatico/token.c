@@ -5,6 +5,8 @@ const char* tipo_para_string(TipoToken tipo) {
     switch (tipo) {
 
         case TK_UAI: return "TK_UAI";
+        case TK_INT: return "TK_INT";
+        case TK_FLOAT: return "TK_FLOAT";
         case TK_SE: return "TK_SE";
         case TK_ENTAO: return "TK_ENTAO";
         case TK_FIM: return "TK_FIM";

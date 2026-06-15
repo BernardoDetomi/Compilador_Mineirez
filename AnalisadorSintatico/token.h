@@ -4,6 +4,8 @@
 typedef enum {
 
     TK_UAI,
+    TK_INT,
+    TK_FLOAT,
     TK_SE,
     TK_ENTAO,
     TK_FIM,

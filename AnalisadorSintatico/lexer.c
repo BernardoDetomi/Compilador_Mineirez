@@ -76,6 +76,12 @@ Token proximo_token() {
             if (strcmp(token.valor, "uai") == 0)
                 token.tipo = TK_UAI;
 
+            else if (strcmp(token.valor, "int") == 0)
+                token.tipo = TK_INT;
+
+            else if (strcmp(token.valor, "float") == 0)
+                token.tipo = TK_FLOAT;
+
             else if (strcmp(token.valor, "se") == 0)
                 token.tipo = TK_SE;
 
@@ -103,6 +109,14 @@ Token proximo_token() {
 
             while (isdigit(codigo[pos])) {
                 avancar();
+            }
+
+            if (codigo[pos] == '.' && isdigit(codigo[pos + 1])) {
+                avancar();
+
+                while (isdigit(codigo[pos])) {
+                    avancar();
+                }
             }
 
             Token token = criar_token(TK_NUM, linha_inicio, coluna_inicio);

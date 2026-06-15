@@ -1,7 +1,9 @@
+uai int x
+uai float y
 
+x = 10
+y = x + 2.5
 
-uai x
-
-x = 10 +
-
-fala "oi"
+se x < 3 entao
+    fala "ok"
+fim
