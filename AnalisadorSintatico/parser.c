@@ -5,10 +5,12 @@
 #include "lexer.h"
 #include "token.h"
 
+// parser descendente recursivo
+
 static Token token_atual;
 static int houve_erro_sintatico;
 
-static void avancar() {
+static void avancar() {  //solicita o proximo token do lexer e armazena na variavel token_atual
 
     token_atual = proximo_token();
 
@@ -17,8 +19,8 @@ static void avancar() {
     }
 }
 
-static void erro(const char* mensagem) {
-
+static void erro(const char* mensagem) {  //função para o tratamento de erros sintáticos, caso tenha erro apenas coloca como igual a 1, salva e passa pro prox
+                                          // no final do programa, ele imprime a mensagem de erro com as linhas que receberam o 1, caso nenhuma tenha recebido ele imprime o sucesso
     houve_erro_sintatico = 1;
 
     printf("\nERRO SINTATICO\n");
@@ -32,7 +34,7 @@ static void erro(const char* mensagem) {
     );
 }
 
-static void consumir(TipoToken tipo) {
+static void consumir(TipoToken tipo) {  //verifica se o token atual é do tipo esperado pela gramatica, caso não seja ele chama a função de erro
 
     if (token_atual.tipo == tipo) {
 
@@ -148,7 +150,7 @@ static void expressao() {
     }
 }
 
-static void condicional() {
+static void condicional() { 
 
     consumir(TK_SE);
 
@@ -166,7 +168,7 @@ static void condicional() {
     consumir(TK_FIM);
 }
 
-static void repeticao() {
+static void repeticao() { 
 
     consumir(TK_ENQUANTO);
 
@@ -184,7 +186,7 @@ static void repeticao() {
     consumir(TK_FIM);
 }
 
-static void comando() {
+static void comando() { //analisa o token atual e decide qual a regra da gramatica deve ser aplicada
 
     switch (token_atual.tipo) {
 
