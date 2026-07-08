@@ -1,8 +1,20 @@
 uai int x
+
 uai float y
 
+uai z
+
+uai a
+
+uai float b
+
+uai c
+
+b = 3.5
 x = 10
 y = x + 2.5
+a = x + y
+c = x / b
 
 se x < 3 entao
     fala "ok"

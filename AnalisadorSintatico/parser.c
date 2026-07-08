@@ -12,7 +12,7 @@ typedef enum {
     TIPO_ERRO
 } TipoDado;
 
-typedef struct {
+typedef struct {  // estrutura para representar um símbolo na tabela de símbolos
     char nome[100];
     TipoDado tipo;
     int usada;
@@ -21,6 +21,7 @@ typedef struct {
 } Simbolo;
 
 #define MAX_SIMBOLOS 100
+#define MAX_MSG 200
 
 static Token token_atual;
 static int houve_erro_sintatico;
@@ -28,8 +29,13 @@ static int houve_erro_semantico;
 static Simbolo tabela_simbolos[MAX_SIMBOLOS];
 static int quantidade_simbolos;
 
-static void avancar() {
+static char erros_semanticos[MAX_MSG][200];
+static int qtd_erros_semanticos = 0;
+static char avisos_semanticos[MAX_MSG][200];
+static int qtd_avisos_semanticos = 0;
 
+static void avancar() { 
+// obter o próximo token, ignorando comentários 
     token_atual = proximo_token();
 
     while (token_atual.tipo == TK_COMENTARIO) {
@@ -37,8 +43,8 @@ static void avancar() {
     }
 }
 
-static void erro(const char* mensagem) {
-
+static void erro(const char* mensagem) { 
+// registrar erro sintático
     houve_erro_sintatico = 1;
 
     printf("\nERRO SINTATICO\n");
@@ -50,17 +56,18 @@ static void erro(const char* mensagem) {
     );
 }
 
-static void erro_semantico(const char* mensagem, int linha, int coluna) {
-
+static void erro_semantico(const char* mensagem, int linha, int coluna) { 
+// registrar warnings
     houve_erro_semantico = 1;
 
-    printf("\nERRO SEMANTICO\n");
-    printf("%s\n", mensagem);
-    printf("linha %d coluna %d\n", linha, coluna);
+    if (qtd_erros_semanticos < MAX_MSG) {
+        snprintf(erros_semanticos[qtd_erros_semanticos], 200, "%s (linha %d coluna %d)", mensagem, linha, coluna);
+        qtd_erros_semanticos++;
+    }
 }
 
-static void consumir(TipoToken tipo) {
-
+static void consumir(TipoToken tipo) { 
+// consumir um token do tipo esperado ou registrar erro caso seja diferente
     if (token_atual.tipo == tipo) {
 
         avancar();
@@ -74,8 +81,8 @@ static void consumir(TipoToken tipo) {
     }
 }
 
-static const char* tipo_dado_para_string(TipoDado tipo) {
-
+static const char* tipo_dado_para_string(TipoDado tipo) { 
+// converter tipo de dado para string para mensagens de erro e tabela de símbolos
     switch (tipo) {
         case TIPO_INT: return "int";
         case TIPO_FLOAT: return "float";
@@ -84,8 +91,8 @@ static const char* tipo_dado_para_string(TipoDado tipo) {
     }
 }
 
-static const char* operacao_para_string(TipoToken operacao) {
-
+static const char* operacao_para_string(TipoToken operacao) { 
+// converter tipo de operação para string para mensagens de erro e tabela de operações
     switch (operacao) {
         case TK_SOMA: return "+";
         case TK_SUB: return "-";
@@ -95,8 +102,8 @@ static const char* operacao_para_string(TipoToken operacao) {
     }
 }
 
-static TipoDado tipo_de_numero(const char* lexema) {
-
+static TipoDado tipo_de_numero(const char* lexema) { 
+// determinar tipo de dado de um número com base no seu lexema
     if (strchr(lexema, '.') != NULL) {
         return TIPO_FLOAT;
     }
@@ -104,13 +111,13 @@ static TipoDado tipo_de_numero(const char* lexema) {
     return TIPO_INT;
 }
 
-static int tipo_numerico(TipoDado tipo) {
-
+static int tipo_numerico(TipoDado tipo) { 
+// verificar se um tipo de dado é numérico (int ou float)
     return tipo == TIPO_INT || tipo == TIPO_FLOAT;
 }
 
-static Simbolo* buscar_simbolo(const char* nome) {
-
+static Simbolo* buscar_simbolo(const char* nome) { 
+// buscar um símbolo na tabela de símbolos pelo nome
     int i;
 
     for (i = 0; i < quantidade_simbolos; i++) {
@@ -122,8 +129,8 @@ static Simbolo* buscar_simbolo(const char* nome) {
     return NULL;
 }
 
-static void imprimir_tabela_simbolos(void) {
-
+static void imprimir_tabela_simbolos(void) { 
+// imprimir a tabela de símbolos ao final da análise
     int i;
 
     printf("\nTABELA DE SIMBOLOS\n");
@@ -144,28 +151,33 @@ static void imprimir_tabela_simbolos(void) {
     }
 }
 
-static TipoDado resultado_operacao_tabela(
+static TipoDado resultado_operacao_tabela( 
+// função auxiliar para calcular o resultado de uma operação aritmética para a tabela de operações
     TipoToken operacao,
     TipoDado esquerda,
     TipoDado direita
 ) {
 
-    if (esquerda == TIPO_ERRO || direita == TIPO_ERRO) {
+    if (esquerda == TIPO_ERRO || direita == TIPO_ERRO) { 
+        // se um dos operandos é erro, o resultado também é erro
         return TIPO_ERRO;
     }
 
-    if (operacao == TK_DIV) {
+    if (operacao == TK_DIV) { 
+        // divisão sempre resulta em float
         return TIPO_FLOAT;
     }
 
-    if (esquerda == TIPO_FLOAT || direita == TIPO_FLOAT) {
+    if (esquerda == TIPO_FLOAT || direita == TIPO_FLOAT) { 
+        // se um dos operandos é float, o resultado é float
         return TIPO_FLOAT;
     }
 
     return TIPO_INT;
 }
 
-static void imprimir_tabela_operacoes(void) {
+static void imprimir_tabela_operacoes(void) { 
+    // imprimir uma tabela de tipos e resultados para as operações aritméticas ao final da análise
 
     TipoToken operacoes[] = { TK_SOMA, TK_SUB, TK_MULT, TK_DIV };
     TipoDado tipos[] = { TIPO_INT, TIPO_FLOAT };
@@ -198,14 +210,16 @@ static void imprimir_tabela_operacoes(void) {
     }
 }
 
-static Simbolo* inserir_simbolo(
+static Simbolo* inserir_simbolo( 
+    // inserir um novo símbolo na tabela de símbolos, verificando duplicatas e limites da tabela
     const char* nome,
     TipoDado tipo,
     int linha,
     int coluna
 ) {
 
-    Simbolo* existente = buscar_simbolo(nome);
+    Simbolo* existente = buscar_simbolo(nome); 
+    // verificar se já existe um símbolo com o mesmo nome
 
     if (existente != NULL) {
         erro_semantico("variavel ja declarada", linha, coluna);
@@ -229,7 +243,8 @@ static Simbolo* inserir_simbolo(
     return &tabela_simbolos[quantidade_simbolos - 1];
 }
 
-static TipoDado verificar_operacao_aritmetica(
+static TipoDado verificar_operacao_aritmetica( 
+    // verificar tipos e resultado de uma operação aritmética, registrando erros semânticos se os tipos forem inválidos
     TipoDado esquerda,
     TipoToken operacao,
     TipoDado direita,
@@ -257,7 +272,8 @@ static TipoDado verificar_operacao_aritmetica(
     return TIPO_INT;
 }
 
-static TipoDado verificar_operacao_relacional(
+static TipoDado verificar_operacao_relacional( 
+    // verificar tipos e resultado de uma operação relacional, registrando erros semânticos se os tipos forem inválidos
     TipoDado esquerda,
     TipoDado direita,
     int linha,
@@ -276,7 +292,8 @@ static TipoDado verificar_operacao_relacional(
     return TIPO_INT;
 }
 
-static int tipos_compativeis_atribuicao(TipoDado destino, TipoDado origem) {
+static int tipos_compativeis_atribuicao(TipoDado destino, TipoDado origem) { 
+    // verificar se os tipos são compatíveis para atribuição, permitindo int para float
 
     if (destino == origem) {
         return 1;
@@ -306,7 +323,7 @@ static void comando();
 
 static void declaracao() {
 
-    TipoDado tipo_variavel = TIPO_INT;
+    TipoDado tipo_variavel = TIPO_ERRO; 
     int linha_id;
     int coluna_id;
     char nome[100];
@@ -363,9 +380,14 @@ static void atribuicao() {
 
     tipo_expressao = expressao();
 
-    if (simbolo != NULL && tipo_expressao != TIPO_ERRO) {
-        if (!tipos_compativeis_atribuicao(simbolo->tipo, tipo_expressao)) {
-            erro_semantico("tipos incompativeis na atribuicao", linha_id, coluna_id);
+    if (simbolo != NULL) {
+        if (simbolo->tipo == TIPO_ERRO) {
+            /* inferir tipo na primeira atribuicao */
+            simbolo->tipo = tipo_expressao;
+        } else if (tipo_expressao != TIPO_ERRO) {
+            if (!tipos_compativeis_atribuicao(simbolo->tipo, tipo_expressao)) {
+                erro_semantico("tipos incompativeis na atribuicao", linha_id, coluna_id);
+            }
         }
     }
 }
@@ -571,6 +593,36 @@ void programa() {
         printf("ANALISE SEMANTICA FINALIZADA COM ERROS!\n");
     } else {
         printf("SUCESSO SEMANTICO!\n");
+    }
+
+    /* imprimir erros semanticos coletados */
+    if (qtd_erros_semanticos > 0) {
+        int i;
+        printf("\nERROS SEMANTICOS (%d):\n", qtd_erros_semanticos);
+        for (i = 0; i < qtd_erros_semanticos; i++) {
+            printf("%s\n", erros_semanticos[i]);
+        }
+    }
+
+    /* gerar avisos para variaveis nao usadas */
+    if (quantidade_simbolos > 0) {
+        int i;
+        for (i = 0; i < quantidade_simbolos; i++) {
+            if (!tabela_simbolos[i].usada) {
+                if (qtd_avisos_semanticos < MAX_MSG) {
+                    snprintf(avisos_semanticos[qtd_avisos_semanticos], 200, "variavel '%s' declarada e nao usada (linha %d)", tabela_simbolos[i].nome, tabela_simbolos[i].linha);
+                    qtd_avisos_semanticos++;
+                }
+            }
+        }
+    }
+
+    if (qtd_avisos_semanticos > 0) {
+        int i;
+        printf("\nWARNINGS (%d):\n", qtd_avisos_semanticos);
+        for (i = 0; i < qtd_avisos_semanticos; i++) {
+            printf("%s\n", avisos_semanticos[i]);
+        }
     }
 
     imprimir_tabela_operacoes();
